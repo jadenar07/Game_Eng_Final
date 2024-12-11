@@ -120,10 +120,8 @@ void LevelC::update(float delta_time) {
     for (int i = 0; i < ENEMY_COUNT; i++) {
         m_game_state.enemies[i].update(FIXED_TIMESTEP, m_game_state.player, NULL, 0, m_game_state.map);
 
-        // Check for collision with the player
         if (m_game_state.player->check_collision(&m_game_state.enemies[i])) {
             if (m_game_state.enemies[i].get_entity_type() == COIN) {
-                // Handle coin collection
                 if (m_game_state.enemies[i].get_is_active()) {
                     coins++;
                     Mix_PlayChannel(-1, m_game_state.sfx_coin, 0);
