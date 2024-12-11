@@ -3,7 +3,8 @@
 
 class LevelC : public Scene {
 public:
-    int ENEMY_COUNT = 3;
+    const int ENEMY_COUNT = 18;
+    float spawn_timer = 0.0f;
     
     LevelC(int& lives) : lives(lives) {}
     ~LevelC();

@@ -1,64 +1,51 @@
 #include "LevelC.h"
 #include "Utility.h"
 
-#define LEVEL_WIDTH 14
+#define LEVEL_WIDTH 100
 #define LEVEL_HEIGHT 8
 #define FIXED_TIMESTEP 0.0166666f
 
+constexpr char SPRITESHEET_FILEPATH[] = "/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/215080.png";
+constexpr char MAP_TEXTURE_FILEPATH[] = "/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/track.png";
+constexpr char ROCKS_TEXTURE_FILEPATH[] = "/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/rocks.png";
+constexpr char SMALL_HURDLE_TEXTURE_FILEPATH[] = "/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/ob.png";
+constexpr char TRAIN_TEXTURE_FILEPATH[] = "/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/train.png";
 
-constexpr char SPRITESHEET_FILEPATH[] = "/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/215080.png",
-           ENEMY_FILEPATH[]  = "/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/madara.png";
+extern bool game_loss;
+extern bool is_moving_right;
+extern int g_score;
+extern int coins;
 
-bool game_loss_c = false;
 
-unsigned int LevelC_DATA[] =
-{
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-    3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
-    3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
-};
+unsigned int LevelC_DATA[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2,1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,  2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
 
-LevelC::~LevelC()
-{
-    delete [] m_game_state.enemies;
-    delete    m_game_state.player;
-    delete    m_game_state.map;
+LevelC::~LevelC() {
+    delete m_game_state.player;
+    delete m_game_state.map;
     Mix_FreeChunk(m_game_state.jump_sfx);
     Mix_FreeMusic(m_game_state.bgm);
 }
 
-void LevelC::initialise()
-{
+void LevelC::initialise() {
     m_game_state.next_scene_id = -1;
-    
-GLuint map_texture_id = Utility::load_texture("/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/ground1.png");
+
+    // Load map
+    GLuint map_texture_id = Utility::load_texture(MAP_TEXTURE_FILEPATH);
     m_game_state.map = new Map(LEVEL_WIDTH, LEVEL_HEIGHT, LevelC_DATA, map_texture_id, 1.0f, 4, 1);
-    
-    // Code from main.cpp's initialise()
-    /**
-     George's Stuff
-     */
-    // Existing
-    int player_walking_animation[4][4] =
-    {
-        { 8, 9, 10, 11 },  // left
-        { 5, 4, 7, 6 },    // right
-        { 13, 12, 13, 14 },// up
-        { 1, 2, 3, 0 }     // down
+
+    // Load player
+    GLuint player_texture_id = Utility::load_texture(SPRITESHEET_FILEPATH);
+    int player_walking_animation[4][4] = {
+        {8, 9, 10, 11},  // left
+        {5, 4, 7, 6},    // right
+        {13, 12, 13, 14},// up
+        {1, 2, 3, 0}     // down
     };
 
     glm::vec3 acceleration = glm::vec3(0.0f, -4.81f, 0.0f);
-    
-    GLuint player_texture_id = Utility::load_texture(SPRITESHEET_FILEPATH);
-    
     m_game_state.player = new Entity(
         player_texture_id,         // texture id
-        5.0f,                      // speed
+        9.0f,                      // speed
         acceleration,              // acceleration
         5.0f,                      // jumping power
         player_walking_animation,  // animation index sets
@@ -68,111 +55,148 @@ GLuint map_texture_id = Utility::load_texture("/Users/jadenritchie/Desktop/SDLSi
         4,                         // animation column amount
         4,                         // animation row amount
         1.0f,                      // width
-        1.0f,                       // height
-        PLAYER
+        1.0f,                      // height
+        PLAYER                     // entity type
     );
-        
-    m_game_state.player->set_position(glm::vec3(5.0f, 0.0f, 0.0f));
-    initial_player_position = glm::vec3(3.0f, 0.0f, 0.0f);
 
-    // Jumping
-    m_game_state.player->set_jumping_power(5.0f);
     
-    /**
-    Enemies' stuff */
-    GLuint enemy_texture_id = Utility::load_texture(ENEMY_FILEPATH);
-
+    m_game_state.player->set_position(glm::vec3(1.0f, -5.0f, 0.0f));
+    
     m_game_state.enemies = new Entity[ENEMY_COUNT];
+    
+    GLuint train_texture_id = Utility::load_texture(TRAIN_TEXTURE_FILEPATH);
+    GLuint hurdle_texture_id = Utility::load_texture(SMALL_HURDLE_TEXTURE_FILEPATH);
+    GLuint rocks_texture_id = Utility::load_texture(ROCKS_TEXTURE_FILEPATH);
+    GLuint coin_texture_id = Utility::load_texture("/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/coin.png");
+    
+    float start_x = 20.0f;
+    float start_y = -5.0f;
+    float coin_y = -4.0f;
 
-    for (int i = 0; i < ENEMY_COUNT; i++)
-    {
-    m_game_state.enemies[i] =  Entity(enemy_texture_id, 1.0f, 1.0f, 1.0f, ENEMY, GUARD, IDLE);
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        if (i % 2 == 0) {
+            if ((i / 2) % 3 == 0) {
+                m_game_state.enemies[i] = Entity(train_texture_id, 2.0f, 3.0f, 3.0f, ENEMY, GUARD, IDLE);
+            } else if ((i / 2) % 3 == 1) {
+                m_game_state.enemies[i] = Entity(hurdle_texture_id, 1.0f, 2.5f, 2.5f, HURDLE);
+            } else {
+                m_game_state.enemies[i] = Entity(rocks_texture_id, 1.0f, 2.0f, 2.0f, ROCKS, GUARD, IDLE);
+            }
+            m_game_state.enemies[i].set_position(glm::vec3(start_x + i * 6.0f, start_y, 0.0f));
+        } else {
+            m_game_state.enemies[i] = Entity(coin_texture_id, 2.0f, 3.0f, 3.0f, COIN);
+            m_game_state.enemies[i].set_position(glm::vec3(start_x + i * 6.0f, coin_y, 0.0f));
+        }
     }
 
-
-    m_game_state.enemies[0].set_position(glm::vec3(7.5f, 0.0f, 0.0f));
-    m_game_state.enemies[0].set_movement(glm::vec3(0.0f));
-    m_game_state.enemies[0].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
-    
-    m_game_state.enemies[1].set_position(glm::vec3(9.0f, 0.0f, 0.0f));
-    m_game_state.enemies[1].set_movement(glm::vec3(0.0f));
-    m_game_state.enemies[1].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
-    
-    m_game_state.enemies[2].set_position(glm::vec3(10.0f, 0.0f, 0.0f));
-    m_game_state.enemies[2].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
-    m_game_state.enemies[2].set_jumping_power(5.0f);
-    
-
-    m_game_state.jump_sfx = Mix_LoadWAV("/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/jump-up-245782.wav");
-}
-
-void LevelC::update(float delta_time)
-{
-    m_game_state.player->update(delta_time, m_game_state.player, m_game_state.enemies, ENEMY_COUNT, m_game_state.map);
-    
-    if (m_game_state.player->get_position().y < -10.0f) m_game_state.next_scene_id = 1;
     
     for (int i = 0; i < ENEMY_COUNT; i++) {
+        if (m_game_state.enemies[i].get_entity_type() == ENEMY) {
+            m_game_state.enemies[i].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
+        }
+        
+        if (m_game_state.enemies[i].get_entity_type() == HURDLE) {
+            m_game_state.enemies[i].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
+            m_game_state.enemies[i].set_jumping_power(5.0f);
+        }
+        
+        if (m_game_state.enemies[i].get_entity_type() == ROCKS) {
+            m_game_state.enemies[i].set_acceleration(glm::vec3(0.0f, -9.81f, 0.0f));
+            m_game_state.enemies[i].set_jumping_power(5.0f);
+        }
+    }
+    m_game_state.jump_sfx = Mix_LoadWAV("/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/jump-up-245782.wav");
+    m_game_state.sfx_defeat = Mix_LoadWAV("/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/failure.wav");
+    m_game_state.sfx_coin = Mix_LoadWAV("/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/coin_sound.wav");
+    
+    if (!m_game_state.sfx_defeat || !m_game_state.sfx_coin) {
+        std::cout << "Failed to load sound effects: " << Mix_GetError() << std::endl;
+    }
+}
+
+void LevelC::update(float delta_time) {
+    m_game_state.player->update(delta_time, m_game_state.player, nullptr, 0, m_game_state.map);
+
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        m_game_state.enemies[i].update(FIXED_TIMESTEP, m_game_state.player, NULL, 0, m_game_state.map);
+
+        // Check for collision with the player
         if (m_game_state.player->check_collision(&m_game_state.enemies[i])) {
-            m_game_state.player->check_collision_x(&m_game_state.enemies[i], 1);
-            m_game_state.player->check_collision_y(&m_game_state.enemies[i], 1);
-            
-            if (lives <= 0) {
-                game_loss_c = true;
-//                m_game_state.player->deactivate();
+            if (m_game_state.enemies[i].get_entity_type() == COIN) {
+                // Handle coin collection
+                if (m_game_state.enemies[i].get_is_active()) {
+                    coins++;
+                    Mix_PlayChannel(-1, m_game_state.sfx_coin, 0);
+                    m_game_state.enemies[i].deactivate();
+                    std::cout << "Coin collected! Total Coins: " << coins << std::endl;
+                }
             } else {
-                lives--;
-//                std::cout << lives<< std::endl;
-//                m_game_state.player->set_position(initial_player_position);
-                
+                m_game_state.player->check_collision_x(&m_game_state.enemies[i], 1);
+                if (m_game_state.player->get_collided_right()) {
+                    game_loss = true;
+                    is_moving_right = false;
+                    Mix_PlayChannel(-1, m_game_state.sfx_defeat, 0);
+                    std::cout << "Game Over!" << std::endl;
+                }
             }
             break;
         }
-
-      
-            m_game_state.enemies[i].update(FIXED_TIMESTEP, m_game_state.player, NULL, 0, m_game_state.map);
-        
-    }
-    
-    if (m_game_state.player->get_position().y < -10.0f) {
-        m_game_state.next_scene_id = 1;
     }
 
-    if (lives == 0) {
-        game_loss_c = true;
-        return;
-    }
-
-    m_game_state.player->collided_with_enemy_x = false;
-    m_game_state.player->collided_with_enemy_y = false;
-    
     static float jump_timer = 0.0f;
     jump_timer += FIXED_TIMESTEP;
     const float jump_interval = 2.0f;
     if (jump_timer >= jump_interval) {
-//                if (g_game_state.enemies[1].get_is_active() && g_game_state.enemies[1].get_collided_bottom()) {
-        m_game_state.enemies[2].jump();
-//                }
-        jump_timer = 0.0f;
+        for (int i = 0; i < ENEMY_COUNT; i++) {
+            if (m_game_state.enemies[i].get_entity_type() == HURDLE) {
+                m_game_state.enemies[i].jump();
+                jump_timer = 0.0f;
+            }
+        }
     }
+
+    if (m_game_state.player->get_position().y < -10.0f) {
+        m_game_state.next_scene_id = 1;
+    }
+
+    if (m_game_state.player->get_position().x >= LEVEL_WIDTH - 8.0f) {
+        m_game_state.player->set_position(glm::vec3(1.0f, m_game_state.player->get_position().y, 0.0f));
+        float start_x = 20.0f;
+        for (int i = 0; i < ENEMY_COUNT; i++) {
+            m_game_state.enemies[i].set_position(glm::vec3(start_x + i * 12.0f, -5.0f, 0.0f));
+            if (m_game_state.enemies[i].get_entity_type() == COIN) {
+                m_game_state.enemies[i].activate();
+            }
+        }
+    }
+
+    std::cout << "Current Coins: " << coins << std::endl;
 }
 
-void LevelC::render(ShaderProgram *program)
-{
+
+void LevelC::render(ShaderProgram* program) {
     m_game_state.map->render(program);
     m_game_state.player->render(program);
-    for (int i = 0; i < ENEMY_COUNT; i++) {
-        m_game_state.enemies[i].render(program);
-        
-    }
-    glm::vec3 player_position = m_game_state.player->get_position();
-    player_position.y += 1.5f;
-    player_position.x -= 1.0f;
-    Utility::draw_text(program, Utility::get_font_id(), std::to_string(lives), 0.3f, 0.025f, player_position);
     
-    if (game_loss_c) {
-        glm::vec3 message_position = glm::vec3(player_position.x - 1.5f, player_position.y - 2.0f, 0.0f);
+    for (int i = 0; i < ENEMY_COUNT; i++) {
+        if (m_game_state.enemies[i].get_is_active()) {
+            m_game_state.enemies[i].render(program);
+        }
+    }
+    
+    glm::vec3 player_position = m_game_state.player->get_position();
+    float camera_left = player_position.x - 5.0f;
+    float camera_top = player_position.y + 3.75f;
+
+    glm::vec3 score_position = glm::vec3(camera_left + 0.5f, camera_top - 0.5f, 0.0f);
+
+    Utility::draw_text(program, Utility::get_font_id(), std::to_string(g_score), 0.5f, 0.05f, score_position);
+    
+    glm::vec3 coin_position = glm::vec3(camera_left + 5.0f, camera_top - 0.5f, 0.0f);
+    Utility::draw_text(program, Utility::get_font_id(), "Coins: " + std::to_string(coins), 0.5f, 0.05f, coin_position);
+
+    if (game_loss) {
+        glm::vec3 message_position = glm::vec3(player_position.x - 1.5f, player_position.y + 2.0f, 0.0f);
         Utility::draw_text(program, Utility::get_font_id(), "YOU LOST", 0.5f, 0.05f, message_position);
     }
-    
 }

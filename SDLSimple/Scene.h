@@ -25,10 +25,14 @@ struct GameState
     Map *map;
     Entity *player;
     Entity *enemies;
+    Entity *coins;
     
     // ————— AUDIO ————— //
     Mix_Music *bgm;
     Mix_Chunk *jump_sfx;
+    Mix_Chunk *sfx_defeat;
+    Mix_Chunk *sfx_coin;
+    Entity *background;
     
     // ————— POINTERS TO OTHER SCENES ————— //
     int next_scene_id;

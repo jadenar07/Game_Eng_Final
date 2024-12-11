@@ -4,7 +4,7 @@
 #include "Map.h"
 #include "glm/glm.hpp"
 #include "ShaderProgram.h"
-enum EntityType { PLATFORM, PLAYER, ENEMY, TRAIN, HURDLE, ROCKS  };
+enum EntityType { PLATFORM, PLAYER, ENEMY, TRAIN, HURDLE, ROCKS, COIN, BACKGROUND  };
 enum AIType     { WALKER, GUARD            };
 enum AIState    { WALKING, IDLE, ATTACKING };
 
@@ -16,6 +16,7 @@ class Entity
 private:
     bool m_is_active = true;
     bool was_colliding = false;
+    bool collected = false;
     
     int m_walking[4][4]; // 4x4 array for walking animations
 
@@ -150,6 +151,9 @@ public:
     void const set_height(float new_height) {m_height = new_height; }
     void const lost_life() {lives--;}
     void const set_loss(bool status) {game_loss = status;}
+    
+    bool get_collected() const { return collected; }
+    void set_collected(bool value) { collected = value; }
 
     // Setter for m_walking
     void set_walking(int walking[4][4])

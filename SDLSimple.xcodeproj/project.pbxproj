@@ -54,6 +54,9 @@
 		AF2052C52CB072B1008129B3 /* kano.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kano.png; sourceTree = "<group>"; };
 		AF2052C72CB0796C008129B3 /* beaker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = beaker.png; sourceTree = "<group>"; };
 		AF2052C82CB0796C008129B3 /* drops.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drops.png; sourceTree = "<group>"; };
+		AF48E29D2D09FE5C007A7292 /* coin_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = coin_sound.wav; sourceTree = "<group>"; };
+		AF48E29E2D09FEC2007A7292 /* failure.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = failure.wav; sourceTree = "<group>"; };
+		AF48E29F2D0A0285007A7292 /* forest.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = forest.jpg; sourceTree = "<group>"; };
 		AF4906B42CDEDB1C0060B447 /* AjFP5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AjFP5.png; sourceTree = "<group>"; };
 		AF4906B52CDEDB1D0060B447 /* 215080.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 215080.png; sourceTree = "<group>"; };
 		AF4906B62CDEDC730060B447 /* crypto.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = crypto.mp3; path = ../../../../Downloads/crypto.mp3; sourceTree = "<group>"; };
@@ -114,6 +117,7 @@
 		AFAEA7902C8B9F6B00C86B6B /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		AFAEA7912C8B9F6B00C86B6B /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
 		AFAEA7922C8B9F6B00C86B6B /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
+		AFB43DD12D09E4BD00D150FD /* coin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coin.png; sourceTree = "<group>"; };
 		AFE39C172CDEB1DF000CBAB6 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		AFE39C182CDEB1DF000CBAB6 /* LevelA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelA.h; sourceTree = "<group>"; };
 		AFE39C192CDEB1E0000CBAB6 /* starter-files */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "starter-files"; sourceTree = "<group>"; };
@@ -148,6 +152,10 @@
 			children = (
 				AF4906B72CDEDC730060B447 /* bounce.wav */,
 				AF4906B52CDEDB1D0060B447 /* 215080.png */,
+				AF48E29E2D09FEC2007A7292 /* failure.wav */,
+				AF48E29D2D09FE5C007A7292 /* coin_sound.wav */,
+				AFB43DD12D09E4BD00D150FD /* coin.png */,
+				AF48E29F2D0A0285007A7292 /* forest.jpg */,
 				AF82294D2D08D72100E2FBDB /* hurdle.png */,
 				AF82294C2D08D72100E2FBDB /* rocks.png */,
 				AF8C1FA12CED9DC900B7F2E0 /* tileset.png */,

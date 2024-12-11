@@ -13,6 +13,10 @@
 #include "ShaderProgram.h"
 #include "Entity.h"
 
+extern bool game_loss;
+extern bool is_moving_right;
+
+
 void Entity::ai_activate(Entity *player)
 {
     switch (m_ai_type)
@@ -147,58 +151,81 @@ void Entity::draw_sprite_from_texture_atlas(ShaderProgram* program, GLuint textu
 
 bool const Entity::check_collision(Entity* other) const
 {
+    const float collision_threshold = 0.8f;
+    
     float x_distance = fabs(m_position.x - other->m_position.x) - ((m_width + other->m_width) / 2.0f);
     float y_distance = fabs(m_position.y - other->m_position.y) - ((m_height + other->m_height) / 2.0f);
 
-    return x_distance < 0.0f && y_distance < 0.0f;
+    return (x_distance < -collision_threshold) && (y_distance < -collision_threshold);
 }
 
-void const Entity::check_collision_y(Entity *collidable_entities, int collidable_entity_count) {
-    for (int i = 0; i < collidable_entity_count; i++) {
-        Entity *collidable_entity = &collidable_entities[i];
+
+void const Entity::check_collision_y(Entity* collidable_entities, int collidable_entity_count)
+{
+    const float collision_threshold = 0.8f; // Adjust this as needed
+    
+    for (int i = 0; i < collidable_entity_count; i++)
+    {
+        Entity* collidable_entity = &collidable_entities[i];
         bool is_colliding_now = check_collision(collidable_entity);
-        if (is_colliding_now && !was_colliding) {
+        
+        if (is_colliding_now)
+        {
             float y_distance = fabs(m_position.y - collidable_entity->m_position.y);
             float y_overlap = fabs(y_distance - (m_height / 2.0f) - (collidable_entity->m_height / 2.0f));
-            if (m_velocity.y > 0) {
-                m_position.y -= y_overlap;
-                m_velocity.y = 0;
-                m_collided_top = true;
-            } else if (m_velocity.y < 0) {
-                m_position.y += y_overlap;
-                m_velocity.y = 0;
+            
+            if (y_overlap > collision_threshold) // Ignore minor overlaps
+            {
+                if (m_velocity.y > 0)
+                {
+                    m_position.y -= y_overlap;
+                    m_velocity.y = 0;
+                    m_collided_top = true;
+                }
+                else if (m_velocity.y < 0)
+                {
+                    m_position.y += y_overlap;
+                    m_velocity.y = 0;
+                    m_collided_bottom = true;
+                }
             }
         }
-        was_colliding = is_colliding_now;
-        was_colliding = is_colliding_now;
-        if (is_colliding_now) return;
     }
-    was_colliding = false;
 }
 
 
 
-void const Entity::check_collision_x(Entity *collidable_entities, int collidable_entity_count) {
-    for (int i = 0; i < collidable_entity_count; i++) {
-        Entity *collidable_entity = &collidable_entities[i];
-        bool is_colliding_now = check_collision(collidable_entity);
-        if (is_colliding_now && !was_colliding) {
+
+void const Entity::check_collision_x(Entity* collidable_entities, int collidable_entity_count)
+{
+    const float collision_threshold = 0.8f; // Adjust this to control sensitivity
+    
+    for (int i = 0; i < collidable_entity_count; i++)
+    {
+        Entity* collidable_entity = &collidable_entities[i];
+        
+        if (check_collision(collidable_entity))
+        {
             float x_distance = fabs(m_position.x - collidable_entity->m_position.x);
             float x_overlap = fabs(x_distance - (m_width / 2.0f) - (collidable_entity->m_width / 2.0f));
-            if (m_velocity.x > 0) {
-                m_position.x -= x_overlap;
-                m_velocity.x = 0;
-                m_collided_right = true;
-            } else if (m_velocity.x < 0) {
-                m_position.x += x_overlap;
-                m_velocity.x = 0;
-                m_collided_left = true;
+            
+            if (x_overlap > collision_threshold) // Ignore small overlaps
+            {
+                if (m_velocity.x > 0)
+                {
+                    m_position.x -= x_overlap;
+                    m_velocity.x = 0;
+                    m_collided_right = true;
+                }
+                else if (m_velocity.x < 0)
+                {
+                    m_position.x += x_overlap;
+                    m_velocity.x = 0;
+                    m_collided_left = true;
+                }
             }
         }
-        was_colliding = is_colliding_now;
-        if (is_colliding_now) return;
     }
-    was_colliding = false;
 }
 
 void const Entity::check_collision_y(Map *map)

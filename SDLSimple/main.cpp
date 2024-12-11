@@ -41,6 +41,8 @@
 
 
 
+
+
 // ––––– CONSTANTS ––––– //
 constexpr int WINDOW_WIDTH  = 640*2,
           WINDOW_HEIGHT = 480*2;
@@ -64,6 +66,7 @@ constexpr float MILLISECONDS_IN_SECOND = 1000.0;
 Mix_Music* bgm = nullptr;
 
 int g_score = 0;
+int coins = 0;
 
 enum AppStatus { RUNNING, TERMINATED };
 
@@ -194,17 +197,17 @@ void process_input()
                     case SDLK_SPACE:
                         // Jump
                         if (g_current_scene->get_state().player->get_collided_bottom())
-                                                {
-                                                    g_current_scene->get_state().player->jump();
-                                                    Mix_PlayChannel(-1,  g_current_scene->get_state().jump_sfx, 0);
-                                                }
-                                                 break;
+                            {
+                                g_current_scene->get_state().player->jump();
+                                Mix_PlayChannel(-1,  g_current_scene->get_state().jump_sfx, 0);
+                            }
+                             break;
                     case SDLK_DOWN:
                         std::cout << "working crouch" << std::endl;
                         g_current_scene->get_state().player->set_movement(glm::vec3(0.0f, -1.0f, 0.0f));
                         break;
                     case SDLK_RETURN:
-                        switch_to_scene(g_levelB);
+                        switch_to_scene(g_levelA);
                         
                     default:
                         break;
@@ -231,8 +234,10 @@ void update()
     delta_time += g_accumulator;
     
     
-    if (g_app_status == RUNNING && g_current_scene != start_level) {
+    if (g_app_status == RUNNING && g_current_scene != start_level && game_loss == false) {
             g_current_scene->get_state().player->move_right();
+        g_score += 10;
+//        std::cout << g_score << std::endl;
     }
     
     if (delta_time < FIXED_TIMESTEP)
@@ -251,6 +256,7 @@ void update()
         
         if (is_moving_right) {
             g_current_scene->get_state().player->move_right();
+
         }
         
         delta_time -= FIXED_TIMESTEP;
@@ -262,6 +268,10 @@ void update()
     // Prevent the camera from showing anything outside of the "edge" of the level
     g_view_matrix = glm::mat4(1.0f);
     
+//    if (game_loss) {
+//        switch_to_scene(win_level);
+//    }
+    
     if (g_current_scene != start_level && g_current_scene != win_level) {
         if (g_current_scene->get_state().player->get_position().x > LEVEL1_LEFT_EDGE) {
             g_view_matrix = glm::translate(g_view_matrix, glm::vec3(-g_current_scene->get_state().player->get_position().x, 3.75, 0));
@@ -269,9 +279,9 @@ void update()
             g_view_matrix = glm::translate(g_view_matrix, glm::vec3(-5, 3.75, 0));
         }
         
-//        if (g_current_scene == g_levelA && g_current_scene->get_state().player->get_position().y < -10.0f) switch_to_scene(g_levelB);
+        if (g_current_scene == g_levelA && g_score > 15000) switch_to_scene(g_levelB);
         
-//        if (g_current_scene == g_levelB && g_current_scene->get_state().player->get_position().y < -10.0f) switch_to_scene(g_levelC);
+        if (g_current_scene == g_levelB && g_score > 30000) switch_to_scene(g_levelC);
 //        if (g_current_scene == g_levelC && g_current_scene->get_state().player->get_position().y < -10.0f) switch_to_scene(win_level);
         
     }

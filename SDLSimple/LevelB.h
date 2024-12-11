@@ -2,7 +2,7 @@
 
 class LevelB : public Scene {
 public:
-    const int ENEMY_COUNT = 9;
+    const int ENEMY_COUNT = 18;
     float spawn_timer = 0.0f;
     
     LevelB(int& lives) : lives(lives) {}
@@ -15,3 +15,4 @@ private:
     glm::vec3 initial_player_position;
     int lives;
 };
+
