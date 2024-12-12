@@ -13,6 +13,7 @@ constexpr char TRAIN_TEXTURE_FILEPATH[] = "/Users/jadenritchie/Desktop/SDLSimple
 constexpr char BACKGROUND_TEXTURE_FILEPATH[] = "/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/forest.jpg";
 
 
+
 extern bool game_loss;
 extern bool is_moving_right;
 extern int g_score;
@@ -68,7 +69,7 @@ void LevelA::initialise() {
         player_texture_id,         // texture id
         4.0f,                      // speed
         acceleration,              // acceleration
-        5.0f,                      // jumping power
+        6.0f,                      // jumping power
         player_walking_animation,  // animation index sets
         0.0f,                      // animation time
         4,                         // animation frame amount
@@ -101,7 +102,7 @@ void LevelA::initialise() {
             } else if ((i / 2) % 3 == 1) {
                 m_game_state.enemies[i] = Entity(hurdle_texture_id, 1.0f, 2.5f, 2.5f, HURDLE);
             } else {
-                m_game_state.enemies[i] = Entity(rocks_texture_id, 1.0f, 2.0f, 2.0f, ROCKS, GUARD, IDLE);
+                m_game_state.enemies[i] = Entity(rocks_texture_id, 1.0f, 2.0f, 2.0f, ROCKS, WALKER, WALKING);
             }
             m_game_state.enemies[i].set_position(glm::vec3(start_x + i * 6.0f, start_y, 0.0f));
         } else {
@@ -118,12 +119,12 @@ void LevelA::initialise() {
         
         if (m_game_state.enemies[i].get_entity_type() == HURDLE) {
             m_game_state.enemies[i].set_acceleration(glm::vec3(0.0f, -15.00f, 0.0f));
-            m_game_state.enemies[i].set_jumping_power(5.0f);
+            m_game_state.enemies[i].set_jumping_power(3.0f);
         }
         
         if (m_game_state.enemies[i].get_entity_type() == ROCKS) {
             m_game_state.enemies[i].set_acceleration(glm::vec3(0.0f, -15.00f, 0.0f));
-            m_game_state.enemies[i].set_jumping_power(5.0f);
+            m_game_state.enemies[i].set_jumping_power(3.0f);
         }
     }
     m_game_state.jump_sfx = Mix_LoadWAV("/Users/jadenritchie/Desktop/SDLSimple/SDLSimple/assets/jump-up-245782.wav");
@@ -140,6 +141,10 @@ void LevelA::update(float delta_time) {
     m_game_state.player->update(delta_time, m_game_state.player, nullptr, 0, m_game_state.map);
 
     for (int i = 0; i < ENEMY_COUNT; i++) {
+        if (m_game_state.enemies[i].get_entity_type() == ENEMY ||
+            m_game_state.enemies[i].get_entity_type() == ROCKS) {
+            m_game_state.enemies[i].ai_activate(m_game_state.player);
+        }
         m_game_state.enemies[i].update(FIXED_TIMESTEP, m_game_state.player, NULL, 0, m_game_state.map);
 
         if (m_game_state.player->check_collision(&m_game_state.enemies[i])) {
@@ -191,11 +196,17 @@ void LevelA::update(float delta_time) {
         }
     }
 
-//    std::cout << "Current Coins: " << coins << std::endl;
 }
 
 
 void LevelA::render(ShaderProgram* program) {
+    glm::vec3 player_position = m_game_state.player->get_position();
+    float camera_left = player_position.x - 5.0f;
+    float camera_top = player_position.y + 3.75f;
+    
+    glm::vec3 level_position = glm::vec3(camera_left + 2.5f, camera_top - 0.1f, 0.0f);
+    Utility::draw_text(program, Utility::get_font_id(), "Level 1", 0.5f, 0.05f, level_position);
+    
     m_game_state.map->render(program);
     m_game_state.player->render(program);
 
@@ -205,9 +216,6 @@ void LevelA::render(ShaderProgram* program) {
         }
     }
 
-    glm::vec3 player_position = m_game_state.player->get_position();
-    float camera_left = player_position.x - 5.0f;
-    float camera_top = player_position.y + 3.75f;
 
     glm::vec3 score_position = glm::vec3(camera_left + 0.5f, camera_top - 0.5f, 0.0f);
     Utility::draw_text(program, Utility::get_font_id(), std::to_string(g_score), 0.5f, 0.05f, score_position);
