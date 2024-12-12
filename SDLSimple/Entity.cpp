@@ -162,7 +162,7 @@ bool const Entity::check_collision(Entity* other) const
 
 void const Entity::check_collision_y(Entity* collidable_entities, int collidable_entity_count)
 {
-    const float collision_threshold = 0.8f; // Adjust this as needed
+    const float collision_threshold = 0.8f; 
     
     for (int i = 0; i < collidable_entity_count; i++)
     {
@@ -174,7 +174,7 @@ void const Entity::check_collision_y(Entity* collidable_entities, int collidable
             float y_distance = fabs(m_position.y - collidable_entity->m_position.y);
             float y_overlap = fabs(y_distance - (m_height / 2.0f) - (collidable_entity->m_height / 2.0f));
             
-            if (y_overlap > collision_threshold) // Ignore minor overlaps
+            if (y_overlap > collision_threshold)
             {
                 if (m_velocity.y > 0)
                 {
@@ -198,7 +198,7 @@ void const Entity::check_collision_y(Entity* collidable_entities, int collidable
 
 void const Entity::check_collision_x(Entity* collidable_entities, int collidable_entity_count)
 {
-    const float collision_threshold = 0.8f; // Adjust this to control sensitivity
+    const float collision_threshold = 0.8f; 
     
     for (int i = 0; i < collidable_entity_count; i++)
     {
@@ -209,7 +209,7 @@ void const Entity::check_collision_x(Entity* collidable_entities, int collidable
             float x_distance = fabs(m_position.x - collidable_entity->m_position.x);
             float x_overlap = fabs(x_distance - (m_width / 2.0f) - (collidable_entity->m_width / 2.0f));
             
-            if (x_overlap > collision_threshold) // Ignore small overlaps
+            if (x_overlap > collision_threshold) 
             {
                 if (m_velocity.x > 0)
                 {
